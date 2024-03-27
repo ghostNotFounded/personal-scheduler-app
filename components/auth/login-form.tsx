@@ -20,9 +20,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import axios from "axios";
+
 import { BASE_URL } from "@/constants";
+import { createCookie } from "@/lib/cookie";
+
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -39,9 +44,14 @@ const LoginForm = () => {
     const password = values.password;
     const email = values.email;
 
-    startTransition(() => {
-      const response = axios.post(url, { email, password });
-      console.log(response);
+    startTransition(async () => {
+      const response = await axios.post(url, { email, password });
+
+      if (response?.status === 200) {
+        await createCookie(response?.data?.token);
+
+        router.push("/app");
+      }
     });
   };
 
