@@ -2,15 +2,16 @@ const WeeklyView = () => {
   const iterations = 24;
 
   return (
-    <div className="bg-neutral-200 p-10 border-t border-neutral-300 overflow-y-auto">
-      <div className="py-2 flex items-center">
-        <div className="flex flex-col items-center space-y-28">
+    <div className="relative bg-neutral-200 p-10 border-t border-neutral-300 overflow-y-auto">
+      <div className="">
+        <div className="space-y-28 min-w-full ">
           {Array.from({ length: iterations }, (_, index) => (
-            <div key={index}>
-              <p className="text-xs w-max">
+            <div key={index} className="flex items-center space-x-10">
+              <p className="text-xs min-w-max">
                 {(index + 1) % 12 ? (index + 1) % 12 : "12"}{" "}
                 {index + 1 > 12 ? "pm" : "am"}
               </p>
+              <hr className="h-[2px] w-full bg-neutral-300 border-0 rounded" />
             </div>
           ))}
         </div>

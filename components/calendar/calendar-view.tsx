@@ -1,20 +1,24 @@
 "use client";
 
-import { getDays } from "@/lib/get-days";
+import { useEffect, useState } from "react";
+
+import { fetchData } from "@/lib/fetchData";
+import { Timetable, WeekDayInfo } from "@/types";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
-import WeeklyView from "./weekly-view";
+import { getDays } from "@/lib/get-days";
+
+import WeeklyView from "@/components/calendar/weekly-view";
 
 const CalendarView = () => {
   const tabs = ["Month", "Week", "Day"];
   const [selectedTab, setSelectedTab] = useState("Week");
 
-  const currWeek = getDays();
+  const currWeek: WeekDayInfo[] = getDays();
 
   return (
     <div className="bg-white text-neutral-950 h-full rounded-2xl overflow-hidden flex flex-col">
-      <div className="px-10 py-5">
+      <div className="px-10 py-5 z-10">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-semibold">December, 2023</h1>
 
@@ -41,7 +45,7 @@ const CalendarView = () => {
         <div className="flex items-center mt-10">
           <CalendarIcon width={25} height={25} />
 
-          <div className="grid grid-cols-7 gap-10 w-full ml-10">
+          <div className="grid grid-cols-7 gap-10 w-full ml-10 select-none">
             {currWeek.map((day, idx) => {
               return (
                 <div

@@ -17,14 +17,7 @@ export function middleware(req: NextRequest) {
   }
 
   if (!authCookie && !isPublicRoute) {
-    let callbackUrl = nextUrl.pathname;
-    if (nextUrl.search) {
-      callbackUrl += nextUrl.search;
-    }
-
-    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-
-    return Response.redirect(new URL(`/login`, nextUrl));
+    return Response.redirect(new URL("/login", nextUrl));
   }
 
   return null;

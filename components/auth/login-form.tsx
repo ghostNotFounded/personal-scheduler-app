@@ -22,9 +22,9 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 
 import { BASE_URL } from "@/constants";
-import { createCookie } from "@/lib/cookie";
 
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { createCookie } from "@/lib/cookie";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -45,12 +45,17 @@ const LoginForm = () => {
     const email = values.email;
 
     startTransition(async () => {
-      const response = await axios.post(url, { email, password });
+      try {
+        const response = await axios.post(url, { email, password });
 
-      if (response?.status === 200) {
-        await createCookie(response?.data?.token);
+        if (response?.status === 200) {
+          window.localStorage.setItem("token", response?.data?.token);
+          await createCookie("Authorized");
 
-        router.push("/app");
+          router.push("/app");
+        }
+      } catch (error) {
+        console.log("Error: ", error);
       }
     });
   };

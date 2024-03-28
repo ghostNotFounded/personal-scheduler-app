@@ -1,13 +1,22 @@
 "use client";
 
-import { SidebarMenuItems } from "@/constants";
 import { deleteCookie } from "@/lib/cookie";
 import { cn } from "@/lib/utils";
-import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
+import {
+  CalendarIcon,
+  DashboardIcon,
+  ExitIcon,
+  GearIcon,
+  PlusCircledIcon,
+} from "@radix-ui/react-icons";
 import Image from "next/image";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import TimetableSwitcher from "./timetable-switcher";
+import { useEffect, useState } from "react";
+import { fetchData } from "@/lib/fetchData";
+import { Timetable } from "@/types";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -17,6 +26,39 @@ const Sidebar = () => {
 
     router.push("/login");
   };
+
+  const [timetables, setTimetables] = useState<Timetable[] | null>(null);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await fetchData("/timetables");
+        setTimetables(res);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getData();
+  }, []);
+
+  const SidebarMenuItems = [
+    {
+      icon: <DashboardIcon />,
+      title: "Dashboard",
+      href: "/app",
+    },
+    {
+      icon: <CalendarIcon />,
+      title: "Calendar",
+      href: "/app/calendar",
+    },
+    {
+      icon: <PlusCircledIcon />,
+      title: "Create timetable",
+      href: "/app/create-timetable",
+    },
+  ];
 
   return (
     <div className="bg-neutral-950 pl-10 pr-20 py-10 flex flex-col justify-between">
@@ -45,6 +87,8 @@ const Sidebar = () => {
             );
           })}
         </div>
+
+        <TimetableSwitcher items={timetables} />
       </div>
 
       <div className="space-y-10 text-sm text-neutral-400">

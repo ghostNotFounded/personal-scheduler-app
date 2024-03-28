@@ -1,3 +1,5 @@
+import { WeekDayInfo } from "@/types";
+
 export const getDays = () => {
   const dayNames = [
     "Sunday",
@@ -13,8 +15,7 @@ export const getDays = () => {
   const firstDayOfWeek = new Date(today);
   firstDayOfWeek.setDate(today.getDate() - currentDay); // Setting it to the first day of the week (Sunday)
 
-  const weekDayInfo: { dayNumber: number; dayName: string; today: boolean }[] =
-    [];
+  const weekDayInfo: WeekDayInfo[] = [];
   for (let i = 0; i < 7; i++) {
     const currentDate = new Date(firstDayOfWeek);
     currentDate.setDate(firstDayOfWeek.getDate() + i);
