@@ -42,8 +42,6 @@ const WeeklyView = () => {
     getData();
   }, [params.timetableId]);
 
-  console.log(events);
-
   return (
     <div className="relative bg-neutral-200 p-10 border-t border-neutral-300 overflow-y-auto">
       <div className="">

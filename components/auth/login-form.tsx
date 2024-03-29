@@ -26,6 +26,8 @@ import { BASE_URL } from "@/constants";
 import { useRouter } from "next/navigation";
 
 import { createCookie } from "@/lib/cookie";
+import { fetchData } from "@/lib/apiHandler";
+import { useTimetableStore } from "@/stores/timetable-store";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -52,6 +54,10 @@ const LoginForm = () => {
         if (response?.status === 200) {
           window.localStorage.setItem("token", response?.data?.token);
           await createCookie("Authorized");
+
+          const data = await fetchData("/timetables");
+
+          useTimetableStore((state) => state.setTimetables(data));
 
           router.push("/dashboard");
         }

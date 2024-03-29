@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { postData } from "@/lib/apiHandler";
 import { redirect } from "next/navigation";
+import { useTimetableStore } from "@/stores/timetable-store";
 
 const NewTimetableCard = () => {
   const [isPending, startTransition] = useTransition();
@@ -36,6 +37,8 @@ const NewTimetableCard = () => {
 
     startTransition(async () => {
       const res = await postData(extension, data);
+
+      useTimetableStore((state) => state.setTimetables);
 
       redirect(`/dashboard/${res?._id}`);
     });

@@ -7,38 +7,22 @@ import { CalendarIcon, ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import TimetableSwitcher from "./timetable-switcher";
 import { useEffect, useState } from "react";
 import { fetchData } from "@/lib/apiHandler";
 import { Timetable } from "@/types";
 import { Calendar } from "@/components/ui/calendar";
+import { useTimetableStore } from "@/stores/timetable-store";
 
 const Sidebar = () => {
   const router = useRouter();
-
-  const params = useParams();
 
   const signOut = async () => {
     await deleteCookie();
 
     router.push("/login");
   };
-
-  const [timetables, setTimetables] = useState<Timetable[] | null>(null);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const res = await fetchData("/timetables");
-        setTimetables(res);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    getData();
-  }, []);
 
   const [date, setDate] = useState<Date | undefined>(new Date());
 
@@ -82,7 +66,10 @@ const Sidebar = () => {
             timetable
           </h1>
           <h1> -&gt;</h1>
-          <TimetableSwitcher items={timetables} className="rounded-[0.75rem]" />
+          <TimetableSwitcher
+            items={useTimetableStore((state) => state.timetables)}
+            className="rounded-[0.75rem]"
+          />
         </div>
       </div>
 
