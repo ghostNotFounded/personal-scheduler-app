@@ -54,7 +54,7 @@ const TimetableSwitcher = ({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild className="bg-neutral-950">
+      <PopoverTrigger asChild className="bg-inherit">
         <Button
           variant={"outline"}
           size={"sm"}
@@ -72,7 +72,7 @@ const TimetableSwitcher = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command className="bg-neutral-950">
+        <Command className="bg-[#050a0d]">
           <CommandList>
             <CommandInput
               placeholder="Search timetable..."
@@ -106,7 +106,7 @@ const TimetableSwitcher = ({
           <CommandList>
             <CommandGroup>
               <CommandItem
-                className="bg-neutral-950 cursor-pointer hover:bg-neutral-700"
+                className="bg-[#050a0d] cursor-pointer hover:bg-neutral-700"
                 onSelect={() => {
                   setOpen(false);
                 }}

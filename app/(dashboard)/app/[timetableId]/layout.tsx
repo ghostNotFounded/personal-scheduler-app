@@ -40,7 +40,7 @@ export default function AppLayout({
 
   return (
     <main
-      className={`flex bg-neutral-950 text-white h-screen w-screen overflow-hidden`}
+      className={`flex bg-[#050a0d] text-white h-screen w-screen overflow-hidden`}
     >
       <Sidebar />
       {children}

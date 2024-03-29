@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`bg-neutral-950 text-white w-screen overflow-x-hidden ${inter.className}`}
+        className={`bg-[#050a0d] text-white w-screen overflow-x-hidden ${inter.className}`}
       >
         {children}
       </body>

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+:root {
+  box-sizing: border-box;
+  height: 100%;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -76,6 +83,29 @@
   .grid-box {
     @apply flex items-center justify-center flex-1 font-semibold text-3xl;
   }
+}
+
+.glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.075),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.075),
+    rgba(255, 255, 255, 0.1)
+  );
+  background-size: 200% 100%;
+  background-position: left;
+  backdrop-filter: blur(20px);
+  border-radius: 0.75rem;
+  transition: all cubic-bezier(0.39, 0.575, 0.565, 1) 500ms;
+  padding: 1.25rem;
+}
+
+.glass:hover {
+  backdrop-filter: blur(100px);
+  background-position: right;
 }
 
 /* remove scrollbars */
