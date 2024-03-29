@@ -17,6 +17,7 @@ export const checkTokenExpiry = () => {
 
   if (expirationTime && Date.now() >= expirationTime) {
     deleteCookie();
+
     redirect("/login");
   }
 };

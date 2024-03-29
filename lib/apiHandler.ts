@@ -15,3 +15,16 @@ export const fetchData = async (extension: string) => {
 
   return response?.data;
 };
+
+export const postData = async (extension: string, data: any) => {
+  const token = window.localStorage.getItem("token");
+
+  checkTokenExpiry();
+
+  const url = BASE_URL + extension;
+  const Authorization = "Bearer " + token;
+
+  const response = await axios.post(url, data, { headers: { Authorization } });
+
+  return response?.data;
+};

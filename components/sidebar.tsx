@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import TimetableSwitcher from "./timetable-switcher";
 import { useEffect, useState } from "react";
-import { fetchData } from "@/lib/fetchData";
+import { fetchData } from "@/lib/apiHandler";
 import { Timetable } from "@/types";
 import { Calendar } from "@/components/ui/calendar";
 

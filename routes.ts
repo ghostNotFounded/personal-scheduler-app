@@ -16,4 +16,4 @@ export const authRoutes = ["/login"];
  * The default redirect path after user logs in
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/app";
+export const DEFAULT_LOGIN_REDIRECT = "/dashboard";

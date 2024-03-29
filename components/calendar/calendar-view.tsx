@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchData } from "@/lib/fetchData";
+import { fetchData } from "@/lib/apiHandler";
 import { Timetable, WeekDayInfo } from "@/types";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";

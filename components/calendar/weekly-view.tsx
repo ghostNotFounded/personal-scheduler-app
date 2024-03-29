@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchData } from "@/lib/fetchData";
+import { fetchData } from "@/lib/apiHandler";
 import { extractEventInfo } from "@/lib/handleEvents"; // Import extractEventInfo
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";

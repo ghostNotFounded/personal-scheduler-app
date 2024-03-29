@@ -23,7 +23,8 @@ import axios from "axios";
 
 import { BASE_URL } from "@/constants";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+
 import { createCookie } from "@/lib/cookie";
 
 const LoginForm = () => {
@@ -52,7 +53,7 @@ const LoginForm = () => {
           window.localStorage.setItem("token", response?.data?.token);
           await createCookie("Authorized");
 
-          router.push("/app");
+          router.push("/dashboard");
         }
       } catch (error) {
         console.log("Error: ", error);
@@ -61,7 +62,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex flex-col w-max mx-auto space-y-5 text-forestLight">
+    <div className="flex flex-col w-max mx-auto space-y-5">
       <h3 className="text-5xl font-semibold">
         Welcome back to
         <br /> Task<span className="text-purple-400">Tide</span>
