@@ -16,11 +16,20 @@ const CalendarView = () => {
 
   const currWeek: WeekDayInfo[] = getDays();
 
+  const currentDate = new Date();
+
+  const monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
+  const currentMonth = monthFormatter.format(currentDate);
+
+  const currentYear = currentDate.getFullYear().toString();
+
   return (
-    <div className="bg-white text-neutral-950 h-full rounded-2xl overflow-hidden flex flex-col">
+    <div className="bg-white text-neutral-950 h-full rounded-2xl overflow-hidden flex flex-col scroll-smooth">
       <div className="px-10 py-5 z-10">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-semibold">December, 2023</h1>
+          <h1 className="text-3xl font-bold">
+            {currentMonth}, {currentYear}
+          </h1>
 
           <div className="grid gap-1 px-1 grid-cols-3 bg-neutral-200 rounded-lg h-10 w-80 items-center">
             {tabs.map((tab, idx) => {

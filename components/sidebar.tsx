@@ -43,7 +43,7 @@ const Sidebar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
-    <div className="p-5 flex flex-col justify-between min-w-max">
+    <div className="p-5 h-full flex flex-col justify-between min-w-max">
       <div className="space-y-5 text-md">
         <Link
           href={"/app/profile"}
@@ -76,7 +76,7 @@ const Sidebar = () => {
 
         <div className="glass">Add other functionality</div>
 
-        <div className="flex justify-between items-center glass text-sm">
+        <div className="flex justify-between items-center glass text-sm z-10 relative">
           <h1>
             Select <br />
             timetable

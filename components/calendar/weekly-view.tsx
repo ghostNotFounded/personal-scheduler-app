@@ -29,13 +29,6 @@ const WeeklyView = () => {
         const res = await fetchData(`/timetables/${params.timetableId}/events`);
 
         if (res && Array.isArray(res)) {
-          // Sort events chronologically based on start time
-          res.sort((a: EventDetail, b: EventDetail) => {
-            const timeA = new Date(a.startTime).getTime();
-            const timeB = new Date(b.startTime).getTime();
-            return timeA - timeB;
-          });
-
           const formattedEvents = res.map((event) =>
             extractEventInfo(event as EventDetail)
           );
