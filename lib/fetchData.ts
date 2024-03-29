@@ -6,7 +6,7 @@ import { checkTokenExpiry } from "./tokenExpired";
 export const fetchData = async (extension: string) => {
   const token = window.localStorage.getItem("token");
 
-  checkTokenExpiry(token as string);
+  checkTokenExpiry();
 
   const url = BASE_URL + extension;
   const Authorization = "Bearer " + token;

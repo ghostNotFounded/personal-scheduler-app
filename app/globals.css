@@ -73,6 +73,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  .grid-box {
+    @apply flex items-center justify-center flex-1 font-semibold text-3xl;
+  }
 }
 
 /* remove scrollbars */

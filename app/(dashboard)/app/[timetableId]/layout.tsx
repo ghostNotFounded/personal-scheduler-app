@@ -14,18 +14,28 @@ export default function AppLayout({
   children: React.ReactNode;
   params: { timetableId: string };
 }) {
-  const [timetable, setTimetable] = useState<Timetable>();
+  const [timetables, setTimetables] = useState<Timetable[]>();
 
   useEffect(() => {
     checkTokenExpiry();
 
-    try {
-      // @ts-ignore
-      const data: Timetable = fetchData(`/timetables/${params.timetableId}`);
-      setTimetable(data);
-    } catch (error) {
-      console.log("Error occured while fetching data: ", error);
-    }
+    const fetchDataAndUpdateState = async () => {
+      try {
+        const data: Timetable[] = await fetchData("/timetables");
+        setTimetables(data);
+
+        // Check if current params id is within the fetched timetables
+        if (!data.some((timetable) => timetable._id === params.timetableId)) {
+          console.log("Current timetable ID:", params.timetableId);
+          console.log("Fetched timetables:", data);
+          redirect("/app");
+        }
+      } catch (error) {
+        console.error("Error occurred while fetching data: ", error);
+      }
+    };
+
+    fetchDataAndUpdateState();
   }, [params.timetableId]);
 
   return (

@@ -8,3 +8,11 @@ export interface WeekDayInfo {
   dayName: string;
   today: boolean;
 }
+
+export interface EventDetail {
+  name: string;
+  startTime: string;
+  endTime: string;
+  timetableId: string;
+  _id: string;
+}

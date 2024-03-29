@@ -34,14 +34,16 @@ const TimetableSwitcher = ({
   const router = useRouter();
   const pathname = usePathname();
 
-  const formattedItems = items?.map((item) => ({
-    label: item.name,
-    value: item._id,
-  }));
+  const formattedItems = Array.isArray(items)
+    ? items.map((item: Timetable) => ({
+        label: item.name,
+        value: item._id,
+      }))
+    : [];
 
   const [open, setOpen] = useState(false);
 
-  const currentTimetable = formattedItems?.find(
+  const currentTimetable = formattedItems.find(
     (item) => item.value === params.timetableId
   );
 
@@ -79,7 +81,7 @@ const TimetableSwitcher = ({
             <CommandEmpty>No timetable found</CommandEmpty>
 
             <CommandGroup heading="Timetables">
-              {formattedItems?.map((timetable) => (
+              {formattedItems.map((timetable) => (
                 <CommandItem
                   key={timetable.value}
                   onSelect={() => onTimetableSelect(timetable)}

@@ -12,7 +12,7 @@ import {
 import Image from "next/image";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import TimetableSwitcher from "./timetable-switcher";
 import { useEffect, useState } from "react";
 import { fetchData } from "@/lib/fetchData";
@@ -20,6 +20,8 @@ import { Timetable } from "@/types";
 
 const Sidebar = () => {
   const router = useRouter();
+
+  const params = useParams();
 
   const signOut = async () => {
     await deleteCookie();
@@ -46,24 +48,27 @@ const Sidebar = () => {
     {
       icon: <DashboardIcon />,
       title: "Dashboard",
-      href: "/app",
+      href: `app/${params.timetableId}`,
     },
     {
       icon: <CalendarIcon />,
       title: "Calendar",
-      href: "/app/calendar",
+      href: `/app/${params.timetableId}/calendar`,
     },
     {
       icon: <PlusCircledIcon />,
       title: "Create timetable",
-      href: "/app/create-timetable",
+      href: `/app/${params.timetableId}/create-timetable`,
     },
   ];
 
   return (
     <div className="bg-neutral-950 pl-10 pr-20 py-10 flex flex-col justify-between">
       <div className="space-y-10">
-        <Link href={"/app"} className="flex items-center space-x-2">
+        <Link
+          href={`/app/${params.timetableId}`}
+          className="flex items-center space-x-2"
+        >
           <Image src={"/Logo.svg"} width={25} height={25} alt="logo" />
           <h6 className="text-xl font-semibold tracking-wider">Plannr</h6>
         </Link>
