@@ -87,10 +87,15 @@ const LoginForm = () => {
           const res = await fetchData(extension);
 
           if (res && Array.isArray(res)) {
+            res.sort((a: EventDetail, b: EventDetail) => {
+              const timeA = new Date(a.startTime).getTime();
+              const timeB = new Date(b.startTime).getTime();
+              return timeA - timeB;
+            });
+
             const formattedEvents = res.map((event) =>
               extractEventInfo(event as EventDetail)
             );
-
             setEventsInStore(formattedEvents);
           }
 
