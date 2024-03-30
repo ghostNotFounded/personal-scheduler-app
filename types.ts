@@ -15,4 +15,11 @@ export interface EventDetail {
   endTime: string;
   timetableId: string;
   _id: string;
+  startDate: string;
+  endDate: string;
+  startDayNumber: number;
+  gridPosition: {
+    row: number;
+    col: number;
+  };
 }

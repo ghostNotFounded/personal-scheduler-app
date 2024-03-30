@@ -3,22 +3,15 @@
 import { getDays } from "@/lib/get-days";
 import { useEventStore } from "@/stores/events-store";
 
-import { EventDetail as OriginalEventDetail } from "@/types";
+import { EventDetail } from "@/types";
 import { CalendarIcon } from "lucide-react";
-
-interface EventDetail extends OriginalEventDetail {
-  startDate: string;
-  endDate: string;
-  gridPosition: {
-    row: number;
-    col: number;
-  };
-}
 
 const WeeklyView = () => {
   const iterations = 24;
 
   const events = useEventStore((state) => state.events);
+
+  const days = getDays();
 
   return (
     <div className="relative bg-neutral-200 p-10 border-t border-neutral-300 overflow-y-auto">

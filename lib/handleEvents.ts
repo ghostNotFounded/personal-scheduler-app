@@ -1,11 +1,17 @@
-import { EventDetail } from "@/types";
-
 interface GridPosition {
   row: number;
   col: number;
 }
 
-export function extractEventInfo(event: EventDetail): {
+interface initialEventDetail {
+  name: string;
+  startTime: string;
+  endTime: string;
+  timetableId: string;
+  _id: string;
+}
+
+export function extractEventInfo(event: initialEventDetail): {
   name: string;
   startDate: string;
   startTime: string;
@@ -14,6 +20,7 @@ export function extractEventInfo(event: EventDetail): {
   timetableId: string;
   _id: string;
   gridPosition: GridPosition;
+  startDayNumber: number;
 } {
   const startDate = new Date(event.startTime);
   const startTime = new Date(event.startTime);
@@ -32,6 +39,8 @@ export function extractEventInfo(event: EventDetail): {
   // Calculate hour of the day (0 to 23)
   const hourOfDay = startDate.getUTCHours();
 
+  const startDayNumber = parseInt(startDateFormatted.split("-")[0]);
+
   // Calculate grid position based on day of the week and hour of the day
   const gridPosition: GridPosition = {
     row: hourOfDay,
@@ -47,6 +56,7 @@ export function extractEventInfo(event: EventDetail): {
     timetableId: event.timetableId,
     _id: event._id,
     gridPosition: gridPosition,
+    startDayNumber: startDayNumber,
   };
 }
 

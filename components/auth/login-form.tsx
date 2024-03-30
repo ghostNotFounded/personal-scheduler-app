@@ -30,16 +30,7 @@ import { useState } from "react";
 import { useEventStore } from "@/stores/events-store";
 import { extractEventInfo } from "@/lib/handleEvents";
 
-import { EventDetail as OriginalEventDetail } from "@/types";
-
-interface EventDetail extends OriginalEventDetail {
-  startDate: string;
-  endDate: string;
-  gridPosition: {
-    row: number;
-    col: number;
-  };
-}
+import { EventDetail } from "@/types";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -87,12 +78,6 @@ const LoginForm = () => {
           const res = await fetchData(extension);
 
           if (res && Array.isArray(res)) {
-            res.sort((a: EventDetail, b: EventDetail) => {
-              const timeA = new Date(a.startTime).getTime();
-              const timeB = new Date(b.startTime).getTime();
-              return timeA - timeB;
-            });
-
             const formattedEvents = res.map((event) =>
               extractEventInfo(event as EventDetail)
             );
