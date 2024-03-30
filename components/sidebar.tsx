@@ -14,6 +14,7 @@ import { fetchData } from "@/lib/apiHandler";
 import { Timetable } from "@/types";
 import { Calendar } from "@/components/ui/calendar";
 import { useTimetableStore } from "@/stores/timetable-store";
+import GlowCard from "./glow-card";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -29,58 +30,68 @@ const Sidebar = () => {
   return (
     <div className="p-5 h-full flex flex-col justify-between min-w-max">
       <div className="space-y-5 text-md">
-        <Link
-          href={"/app/profile"}
-          className="flex justify-between items-center glass"
-        >
-          <div className="flex space-x-2">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>Pl</AvatarFallback>
-            </Avatar>
+        <GlowCard>
+          <Link
+            href={"/app/profile"}
+            className="flex justify-between items-center"
+          >
+            <div className="flex space-x-2">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>Pl</AvatarFallback>
+              </Avatar>
 
-            <h6 className="text-sm w-max flex flex-col">
-              <span>Arsheya Singh Parmar</span>
-              <span className="font-light text-neutral-300">
-                Fellow BITSian
-              </span>
-            </h6>
+              <h6 className="text-sm w-max flex flex-col">
+                <span>Arsheya Singh Parmar</span>
+                <span className="font-light">Fellow BITSian</span>
+              </h6>
+            </div>
+
+            <div className="bg-black p-3 rounded-full">
+              <CalendarIcon className="w-5 h-5" />
+            </div>
+          </Link>
+        </GlowCard>
+
+        <GlowCard>
+          <div className="flex justify-between items-center">
+            <Calendar mode="single" selected={date} onSelect={setDate} />
           </div>
+        </GlowCard>
 
-          <div className="bg-black p-3 rounded-full">
-            <CalendarIcon className="w-5 h-5" />
+        <GlowCard>
+          <div>Next event</div>
+        </GlowCard>
+
+        <GlowCard>
+          <div>Add other functionality</div>
+        </GlowCard>
+
+        <GlowCard>
+          <div className="flex justify-between items-center text-sm z-10 relative">
+            <h1>
+              Select <br />
+              timetable
+            </h1>
+            <h1> -&gt;</h1>
+            <TimetableSwitcher
+              items={useTimetableStore((state) => state.timetables)}
+              className="rounded-[0.75rem]"
+            />
           </div>
-        </Link>
-
-        <div className="flex justify-between items-center glass">
-          <Calendar mode="single" selected={date} onSelect={setDate} />
-        </div>
-
-        <div className="glass">Next event</div>
-
-        <div className="glass">Add other functionality</div>
-
-        <div className="flex justify-between items-center glass text-sm z-10 relative">
-          <h1>
-            Select <br />
-            timetable
-          </h1>
-          <h1> -&gt;</h1>
-          <TimetableSwitcher
-            items={useTimetableStore((state) => state.timetables)}
-            className="rounded-[0.75rem]"
-          />
-        </div>
+        </GlowCard>
       </div>
 
-      <div className="text-sm text-neutral-400 glass">
-        <p
-          className="flex items-center space-x-2 cursor-pointer hover:text-destructive duration-200 ease-in"
-          onClick={signOut}
-        >
-          <ExitIcon /> <span>Logout</span>
-        </p>
-      </div>
+      <GlowCard>
+        <div className="text-sm text-neutral-400">
+          <p
+            className="flex items-center space-x-2 cursor-pointer hover:text-destructive duration-200 ease-in"
+            onClick={signOut}
+          >
+            <ExitIcon /> <span>Logout</span>
+          </p>
+        </div>
+      </GlowCard>
     </div>
   );
 };

@@ -1,27 +1,25 @@
 "use client";
 
 import Sidebar from "@/components/sidebar";
-import { fetchData } from "@/lib/apiHandler";
-import { useTimetableStore } from "@/stores/timetable-store";
-import React, { useEffect } from "react";
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const res = await fetchData("/timetables");
+import { EventDetail as OriginalEventDetail } from "@/types";
 
-        useTimetableStore((state) => state.setTimetables(res));
+interface EventDetail extends OriginalEventDetail {
+  startDate: string;
+  endDate: string;
+  gridPosition: {
+    row: number;
+    col: number;
+  };
+}
 
-        console.log(useTimetableStore((state) => state.timetables));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    getData();
-  }, []);
-
+const DashboardLayout = ({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { timetableId: string };
+}) => {
   return (
     <main className="flex h-screen overflow-hidden">
       <header>

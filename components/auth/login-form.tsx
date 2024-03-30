@@ -3,8 +3,6 @@
 import { LoginSchema } from "@/schemeas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useTransition } from "react";
-
 import * as z from "zod";
 
 import { useForm } from "react-hook-form";
@@ -28,10 +26,23 @@ import { useRouter } from "next/navigation";
 import { createCookie } from "@/lib/cookie";
 import { fetchData } from "@/lib/apiHandler";
 import { useTimetableStore } from "@/stores/timetable-store";
+import { useState } from "react";
+import { useEventStore } from "@/stores/events-store";
+import { extractEventInfo } from "@/lib/handleEvents";
+
+import { EventDetail as OriginalEventDetail } from "@/types";
+
+interface EventDetail extends OriginalEventDetail {
+  startDate: string;
+  endDate: string;
+  gridPosition: {
+    row: number;
+    col: number;
+  };
+}
 
 const LoginForm = () => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -41,37 +52,65 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    const url = BASE_URL + "/auth/login";
+  const setTimetablesInStore = useTimetableStore(
+    (state) => state.setTimetables
+  );
 
+  const setEventsInStore = useEventStore((state) => state.setEvents);
+
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+    const url = BASE_URL + "/auth/login";
     const password = values.password;
     const email = values.email;
 
-    startTransition(async () => {
-      try {
-        const response = await axios.post(url, { email, password });
+    try {
+      setLoading(true);
 
-        if (response?.status === 200) {
-          window.localStorage.setItem("token", response?.data?.token);
-          await createCookie("Authorized");
+      const response = await axios.post(url, { email, password });
 
-          const data = await fetchData("/timetables");
+      if (response?.status === 200) {
+        window.localStorage.setItem("token", response?.data?.token);
+        await createCookie("Authorized");
 
-          useTimetableStore((state) => state.setTimetables(data));
+        const data = await fetchData("/timetables");
 
+        // Call the hook inside the component
+        setTimetablesInStore(data);
+
+        if (data?.length > 0) {
+          const id = data[0]._id;
+
+          const extension = "/timetables" + `/${id}` + "/events";
+
+          const res = await fetchData(extension);
+
+          if (res && Array.isArray(res)) {
+            const formattedEvents = res.map((event) =>
+              extractEventInfo(event as EventDetail)
+            );
+
+            setEventsInStore(formattedEvents);
+          }
+
+          router.push(`/dashboard/${id}`);
+        } else {
           router.push("/dashboard");
         }
-      } catch (error) {
-        console.log("Error: ", error);
       }
-    });
+    } catch (error) {
+      console.log("Error: ", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col w-max mx-auto space-y-5">
       <h3 className="text-5xl font-semibold">
         Welcome back to
-        <br /> Task<span className="text-purple-400">Tide</span>
+        <br /> Plannr
       </h3>
 
       <Form {...form}>
@@ -89,7 +128,7 @@ const LoginForm = () => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isPending}
+                      disabled={loading}
                       {...field}
                       placeholder="f20XXXXXX@pilani.bits-pilani.ac.in"
                       className="bg-purple-500/15 border-purple-500 text-purple-200"
@@ -108,9 +147,9 @@ const LoginForm = () => {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isPending}
+                      disabled={loading}
                       {...field}
-                      placeholder="******"
+                      placeholder="********"
                       type="password"
                       className="bg-purple-500/15 border-purple-500 text-purple-200"
                     />
@@ -124,7 +163,7 @@ const LoginForm = () => {
           <Button
             type="submit"
             className="w-full bg-purple-500/15 text-purple-500 hover:border border-purple-500 hover:bg-purple-500/30 hover:text-purple-300"
-            disabled={isPending}
+            disabled={loading}
           >
             Login
           </Button>

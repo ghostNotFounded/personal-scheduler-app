@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { fetchData } from "@/lib/apiHandler";
-import { Timetable, WeekDayInfo } from "@/types";
+import { WeekDayInfo } from "@/types";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { getDays } from "@/lib/get-days";
@@ -24,7 +23,7 @@ const CalendarView = () => {
   const currentYear = currentDate.getFullYear().toString();
 
   return (
-    <div className="bg-white text-neutral-950 h-full rounded-2xl overflow-hidden flex flex-col scroll-smooth">
+    <div className="bg-white text-neutral-950 h-full rounded-2xl overflow-hidden flex flex-col scroll-smooth min-w-max">
       <div className="px-10 py-5 z-10">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">
