@@ -32,13 +32,17 @@ const NewTimetableCard = () => {
     },
   });
 
+  const setTimetablesInStore = useTimetableStore(
+    (state) => state.setTimetables
+  );
+
   const onSubmit = (data: z.infer<typeof NewTimetableSchema>) => {
     const extension = "/timetables";
 
     startTransition(async () => {
       const res = await postData(extension, data);
 
-      useTimetableStore((state) => state.setTimetables);
+      setTimetablesInStore(res);
 
       redirect(`/dashboard/${res?._id}`);
     });
