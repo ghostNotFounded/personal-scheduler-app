@@ -3,10 +3,8 @@
 import { getDays } from "@/lib/get-days";
 import { useEventStore } from "@/stores/events-store";
 
-import { EventDetail } from "@/types";
-import { color } from "framer-motion";
 import { CalendarIcon } from "lucide-react";
-import { difference } from "next/dist/build/utils";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactElement } from "react";
 
 const WeeklyView = () => {
@@ -15,6 +13,11 @@ const WeeklyView = () => {
   const events = useEventStore((state) => state.events);
 
   const days = getDays();
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  console.log(pathname);
 
   return (
     <div className="relative bg-neutral-200 p-10 border-t border-neutral-300 overflow-y-auto">
@@ -56,8 +59,9 @@ const WeeklyView = () => {
             filtered.map((event, idx) => {
               divs.push(
                 <div
+                  onClick={() => router.push(pathname + `/event/${event._id}`)}
                   key={idx}
-                  className={`rounded-xl p-5 m-1 text-white hover:m-0 transition-all duration-200 ease-out`}
+                  className="rounded-xl p-5 m-1 text-white cursor-pointer hover:m-0 transition-all duration-200 ease-out"
                   style={{
                     background: `${colors[idx]}`,
                     gridRow: `span ${event.difference} / span ${event.difference}`,

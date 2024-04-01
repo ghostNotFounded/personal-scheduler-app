@@ -60,10 +60,6 @@ const Sidebar = () => {
         </GlowCard>
 
         <GlowCard>
-          <div>Next event</div>
-        </GlowCard>
-
-        <GlowCard>
           <div>Add other functionality</div>
         </GlowCard>
 
