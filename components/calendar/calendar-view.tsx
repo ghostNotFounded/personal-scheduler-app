@@ -8,6 +8,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { getDays } from "@/lib/get-days";
 
 import WeeklyView from "@/components/calendar/weekly-view";
+import { useEventStore } from "@/stores/events-store";
 
 const CalendarView = () => {
   const tabs = ["Month", "Week", "Day"];
@@ -21,6 +22,8 @@ const CalendarView = () => {
   const currentMonth = monthFormatter.format(currentDate);
 
   const currentYear = currentDate.getFullYear().toString();
+
+  const events = useEventStore((state) => state.events);
 
   return (
     <div className="bg-white text-neutral-950 h-full rounded-2xl overflow-hidden flex flex-col scroll-smooth min-w-max">
@@ -74,7 +77,7 @@ const CalendarView = () => {
         </div>
       </div>
 
-      <WeeklyView />
+      {events ? <WeeklyView /> : "Nothing found :/"}
     </div>
   );
 };

@@ -10,16 +10,14 @@ export interface WeekDayInfo {
 }
 
 export interface EventDetail {
+  _id: string;
   name: string;
   startTime: string;
   endTime: string;
   timetableId: string;
-  _id: string;
   startDate: string;
   endDate: string;
   startDayNumber: number;
-  gridPosition: {
-    row: number;
-    col: number;
-  };
+  row: number;
+  difference: number;
 }

@@ -4,7 +4,10 @@ import { getDays } from "@/lib/get-days";
 import { useEventStore } from "@/stores/events-store";
 
 import { EventDetail } from "@/types";
+import { color } from "framer-motion";
 import { CalendarIcon } from "lucide-react";
+import { difference } from "next/dist/build/utils";
+import { ReactElement } from "react";
 
 const WeeklyView = () => {
   const iterations = 24;
@@ -27,26 +30,64 @@ const WeeklyView = () => {
         ))}
       </div>
 
-      <div className="flex absolute top-12 w-[calc(100%-5rem)] h-[138rem]">
+      <div className="flex absolute top-12 w-[calc(100%-5rem)] h-[144rem]">
         <CalendarIcon width={25} height={25} className="text-transparent" />
 
-        <div className="grid grid-cols-7 gap-10 w-full ml-10 select-none"></div>
+        <div className="grid grid-cols-7 gap-10 w-full ml-10 select-none">
+          {days.map((day, idx) => {
+            const filtered = events.filter(
+              (event) => event.startDayNumber === day.dayNumber
+            );
+
+            let j = 0;
+
+            let divs: ReactElement[] = [];
+
+            const colors = [
+              "#b9d7fc",
+              "#c4acfb",
+              "#fff",
+              "#9fefc1",
+              "#f7d38a",
+              "#f9aad6",
+            ];
+            let colorsIdx = 0;
+
+            filtered.map((event, idx) => {
+              divs.push(
+                <div
+                  key={idx}
+                  className={`rounded-xl p-5 m-1 text-white hover:m-0 transition-all duration-200 ease-out`}
+                  style={{
+                    background: `${colors[idx]}`,
+                    gridRow: `span ${event.difference} / span ${event.difference}`,
+                    gridRowStart: `${event.row}`,
+                  }}
+                >
+                  <h1 className="font-semibold">{event.name}</h1>
+                  <p className="text-xs font-light">
+                    {event.startTime} - {event.endTime}
+                  </p>
+                </div>
+              );
+
+              if (idx >= colors.length) {
+                idx = 0;
+              } else {
+                idx++;
+              }
+            });
+
+            return (
+              <div key={idx} className="grid grid-rows-96">
+                {divs.map((ele) => ele)}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 };
 
 export default WeeklyView;
-
-const EventCard = ({ event }: { event: EventDetail }) => {
-  return (
-    <div
-      className={`bg-purple-400 rounded-lg text-white p-5 text-sm flex flex-col space-y-2`}
-    >
-      <span className="font-semibold">{event.name}</span>
-      <span>
-        {event.startTime} - {event.endTime}
-      </span>
-    </div>
-  );
-};

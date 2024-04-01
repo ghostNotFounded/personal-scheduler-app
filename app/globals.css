@@ -126,6 +126,10 @@ body,
   background-position: right;
 }
 
+.grid-rows-96 {
+  grid-template-rows: repeat(96, minmax(0, 1fr));
+}
+
 /* remove scrollbars */
 ::-webkit-scrollbar {
   width: 0px;

@@ -1,16 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { EventDetail as OriginalEventDetail } from "@/types";
-
-interface EventDetail extends OriginalEventDetail {
-  startDate: string;
-  endDate: string;
-  gridPosition: {
-    row: number;
-    col: number;
-  };
-}
+import { EventDetail } from "@/types";
 
 interface EventStoreProps {
   events: EventDetail[];

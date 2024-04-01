@@ -19,8 +19,9 @@ export function extractEventInfo(event: initialEventDetail): {
   endTime: string;
   timetableId: string;
   _id: string;
-  gridPosition: GridPosition;
+  row: number;
   startDayNumber: number;
+  difference: number;
 } {
   const startDate = new Date(event.startTime);
   const startTime = new Date(event.startTime);
@@ -33,19 +34,12 @@ export function extractEventInfo(event: initialEventDetail): {
   const startTimeFormatted = formatTime(startTime);
   const endTimeFormatted = formatTime(endTime);
 
-  // Calculate day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
-  const dayOfWeek = startDate.getUTCDay();
-
   // Calculate hour of the day (0 to 23)
   const hourOfDay = startDate.getUTCHours();
 
   const startDayNumber = parseInt(startDateFormatted.split("-")[0]);
 
-  // Calculate grid position based on day of the week and hour of the day
-  const gridPosition: GridPosition = {
-    row: hourOfDay,
-    col: dayOfWeek,
-  };
+  const difference = subtractDates(endTime, startTime);
 
   return {
     name: event.name,
@@ -55,9 +49,21 @@ export function extractEventInfo(event: initialEventDetail): {
     endTime: endTimeFormatted,
     timetableId: event.timetableId,
     _id: event._id,
-    gridPosition: gridPosition,
+    row: hourOfDay * 4 - 3,
     startDayNumber: startDayNumber,
+    difference: difference * 4,
   };
+}
+
+function subtractDates(date1: Date, date2: Date): number {
+  const date1Ms = date1.getTime();
+  const date2Ms = date2.getTime();
+
+  const differenceMs = Math.abs(date1Ms - date2Ms);
+
+  const differenceHours = Math.floor(differenceMs / (1000 * 60 * 60));
+
+  return differenceHours;
 }
 
 function formatDate(date: Date): string {
