@@ -67,7 +67,6 @@ const LoginForm = () => {
 
         const data = await fetchData("/timetables");
 
-        // Call the hook inside the component
         setTimetablesInStore(data);
 
         if (data?.length > 0) {

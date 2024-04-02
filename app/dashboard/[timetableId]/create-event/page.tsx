@@ -1,9 +1,9 @@
-import NewTimetableCard from "@/components/dashboard/new-timetable-card";
+import NewEventCard from "@/components/dashboard/new-event-card";
 
 const CreateTimetablePage = () => {
   return (
     <div className="h-screen flex items-center">
-      <NewTimetableCard />
+      <NewEventCard />
     </div>
   );
 };

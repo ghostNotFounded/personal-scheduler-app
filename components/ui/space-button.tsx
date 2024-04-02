@@ -1,7 +1,7 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-import Magnetic from "@/components/Magnetic";
+import Magnetic from "@/components/magnetic";
 
 interface ButtonProps {
   children?: React.ReactNode;

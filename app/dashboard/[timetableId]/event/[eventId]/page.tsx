@@ -1,9 +1,11 @@
 "use client";
 
-import Model from "@/components/model";
-import handleDateFormat from "@/lib/handleTime";
-import { useEventStore } from "@/stores/events-store";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+
+import Model from "@/components/model";
+
+import { useEventStore } from "@/stores/events-store";
 
 const EventPage = ({
   params,
@@ -20,7 +22,7 @@ const EventPage = ({
     <section className="space-y-5 h-screen flex flex-col justify-between">
       <h1 className="text-4xl font-bold">{event.name}</h1>
       <p>
-        {event.name} starts at {handleDateFormat(event.startDate)} at{" "}
+        {event.name} starts at {format(event.startDate, "PPP")} at{" "}
         {event.startTime}
       </p>
       <p className="text-xs text-neutral-800">

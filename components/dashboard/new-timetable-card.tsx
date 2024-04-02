@@ -32,8 +32,8 @@ const NewTimetableCard = () => {
     },
   });
 
-  const setTimetablesInStore = useTimetableStore(
-    (state) => state.setTimetables
+  const extendTimetablesInStore = useTimetableStore(
+    (state) => state.extendTimetables
   );
 
   const onSubmit = (data: z.infer<typeof NewTimetableSchema>) => {
@@ -42,7 +42,7 @@ const NewTimetableCard = () => {
     startTransition(async () => {
       const res = await postData(extension, data);
 
-      setTimetablesInStore(res);
+      extendTimetablesInStore([res]);
 
       redirect(`/dashboard/${res?._id}`);
     });
@@ -67,6 +67,7 @@ const NewTimetableCard = () => {
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
+                      maxLength={15}
                       disabled={isPending}
                       {...field}
                       placeholder="Timetable #1"

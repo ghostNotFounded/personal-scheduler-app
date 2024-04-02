@@ -7,11 +7,10 @@ import { CalendarIcon, ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import TimetableSwitcher from "./timetable-switcher";
-import { useEffect, useState } from "react";
-import { fetchData } from "@/lib/apiHandler";
-import { Timetable } from "@/types";
+import { useState } from "react";
+
 import { Calendar } from "@/components/ui/calendar";
 import { useTimetableStore } from "@/stores/timetable-store";
 import GlowCard from "./glow-card";
@@ -26,6 +25,8 @@ const Sidebar = () => {
   };
 
   const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const pathname = usePathname();
 
   return (
     <div className="p-5 h-full flex flex-col justify-between min-w-max">
@@ -68,7 +69,7 @@ const Sidebar = () => {
               + Add timetable
             </Link>
             <Link
-              href={"/dashboard/create/event"}
+              href={`${pathname}/create-event`}
               className="cursor-pointer underlined mb-2"
             >
               + Add event
@@ -77,7 +78,7 @@ const Sidebar = () => {
         </GlowCard>
 
         <GlowCard>
-          <div className="flex justify-between items-center text-sm z-10 relative">
+          <div className="flex justify-between items-center text-sm z-20 relative">
             <h1>
               Select <br />
               timetable
