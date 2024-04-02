@@ -134,3 +134,24 @@ body,
 ::-webkit-scrollbar {
   width: 0px;
 }
+
+.underlined {
+  position: relative;
+  width: max-content;
+}
+
+.underlined::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: -5%;
+  width: 0%;
+  height: 50%;
+  opacity: 50%;
+  background: #986ac6;
+  transition: all 200ms ease-in;
+}
+
+.underlined:hover::after {
+  width: 110%;
+}

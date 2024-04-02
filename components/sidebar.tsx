@@ -60,7 +60,20 @@ const Sidebar = () => {
         </GlowCard>
 
         <GlowCard>
-          <div>Add other functionality</div>
+          <div className="flex flex-col">
+            <Link
+              href={"/dashboard/create/timetable"}
+              className="cursor-pointer underlined mb-2"
+            >
+              + Add timetable
+            </Link>
+            <Link
+              href={"/dashboard/create/event"}
+              className="cursor-pointer underlined mb-2"
+            >
+              + Add event
+            </Link>
+          </div>
         </GlowCard>
 
         <GlowCard>
