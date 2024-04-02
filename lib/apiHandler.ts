@@ -28,3 +28,16 @@ export const postData = async (extension: string, data: any) => {
 
   return response?.data;
 };
+
+export const deleteData = async (extension: string, id: string) => {
+  const token = window.localStorage.getItem("token");
+
+  checkTokenExpiry();
+
+  const url = BASE_URL + "/" + extension + "/" + id;
+  const Authorization = "Bearer " + token;
+
+  const response = await axios.delete(url, { headers: { Authorization } });
+
+  return response?.data;
+};
