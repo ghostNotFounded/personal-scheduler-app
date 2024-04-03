@@ -67,11 +67,6 @@ const CalendarView = () => {
     const filtered = timetables.filter(
       (timetable) => timetable._id !== params.timetableId
     );
-
-    console.log({ timetables });
-
-    console.log({ filtered });
-
     setTimetablesInStore(filtered);
 
     if (filtered.length === 0) {

@@ -29,7 +29,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { TimePicker } from "../ui/date-time-picker/time-picker";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const NewEventCard = () => {
   const [isPending, startTransition] = useTransition();
@@ -45,11 +45,11 @@ const NewEventCard = () => {
     },
   });
 
-  const params = useParams();
-  const setEventsInStore = useEventStore((state) => state.setEvents);
+  const { timetableId, eventId } = useParams();
+  const router = useRouter();
 
   const onSubmit = (data: z.infer<typeof NewEventSchema>) => {
-    const extension = `/timetables/${params.timetableId}/events`;
+    const extension = `/timetables/${timetableId}/events`;
 
     const padWithZero = (num: number): string => {
       return num < 10 ? "0" + num : num.toString();
@@ -78,6 +78,8 @@ const NewEventCard = () => {
         };
 
         await postData(extension, body);
+
+        router.push(`/dashboard/${timetableId}`);
       });
     } else {
       console.log("Your event can't end before it starts");

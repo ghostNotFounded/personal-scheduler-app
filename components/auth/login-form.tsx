@@ -28,9 +28,6 @@ import { fetchData } from "@/lib/apiHandler";
 import { useTimetableStore } from "@/stores/timetable-store";
 import { useState } from "react";
 import { useEventStore } from "@/stores/events-store";
-import { extractEventInfo } from "@/lib/handleEvents";
-
-import { EventDetail } from "@/types";
 
 const LoginForm = () => {
   const router = useRouter();

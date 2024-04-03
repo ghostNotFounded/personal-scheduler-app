@@ -1,13 +1,8 @@
-interface GridPosition {
-  row: number;
-  col: number;
-}
-
 interface initialEventDetail {
   name: string;
   startTime: string;
   endTime: string;
-  timetableId: string;
+  timetableID: string;
   _id: string;
 }
 
@@ -46,7 +41,7 @@ export function extractEventInfo(event: initialEventDetail): {
     startTime: startTimeFormatted,
     endDate: endDateFormatted,
     endTime: endTimeFormatted,
-    timetableId: event.timetableId,
+    timetableId: event.timetableID,
     _id: event._id,
     row: hourOfDay * 4 - 3,
     startDayNumber: startDayNumber,

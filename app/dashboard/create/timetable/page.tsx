@@ -2,7 +2,7 @@ import NewTimetableCard from "@/components/dashboard/new-timetable-card";
 
 const CreateTimetablePage = () => {
   return (
-    <div className="h-screen flex items-center">
+    <div className="h-full grid place-items-center">
       <NewTimetableCard />
     </div>
   );

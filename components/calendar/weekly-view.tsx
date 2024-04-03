@@ -2,6 +2,7 @@
 
 import { fetchData } from "@/lib/apiHandler";
 import { getDays } from "@/lib/get-days";
+import { extractEventInfo } from "@/lib/handleEvents";
 import { useEventStore } from "@/stores/events-store";
 import { EventDetail } from "@/types";
 
@@ -23,14 +24,23 @@ const WeeklyView = () => {
 
   useEffect(() => {
     const getEvents = async () => {
-      const extension = `/timetables/${params.timetableId}/events/`;
+      const extension = `/timetables/${params.timetableId}/events`;
       const res = await fetchData(extension);
 
-      setEventsInStore(res);
+      if (res && Array.isArray(res)) {
+        const formattedEvents = res.map((event) => extractEventInfo(event));
+        console.log(formattedEvents);
+
+        setEventsInStore(formattedEvents);
+
+        setEvents(formattedEvents);
+      }
     };
 
     getEvents();
   }, [params.timetableId]);
+
+  console.log({ events });
 
   const days = getDays();
 
@@ -79,7 +89,7 @@ const WeeklyView = () => {
                 <div
                   onClick={() => router.push(pathname + `/event/${event._id}`)}
                   key={idx}
-                  className="rounded-xl p-5 m-1 text-white cursor-pointer hover:m-0 transition-all duration-200 ease-out"
+                  className="rounded-xl p-5 m-1 text-white cursor-pointer"
                   style={{
                     background: `${colors[idx]}`,
                     gridRow: `span ${event.difference} / span ${event.difference}`,
