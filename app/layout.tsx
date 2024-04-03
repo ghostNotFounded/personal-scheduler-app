@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ToasterProvider } from "@/providers/toast-provider";
+import { ModalProvider } from "@/providers/modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +21,8 @@ export default function RootLayout({
       <body
         className={`bg-[#050a0d] text-white w-screen overflow-x-hidden ${inter.className}`}
       >
+        <ToasterProvider />
+        <ModalProvider />
         {children}
       </body>
     </html>

@@ -30,6 +30,7 @@ import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { TimePicker } from "../ui/date-time-picker/time-picker";
 import { useParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const NewEventCard = () => {
   const [isPending, startTransition] = useTransition();
@@ -79,10 +80,12 @@ const NewEventCard = () => {
 
         await postData(extension, body);
 
+        toast.success("Event successfully created");
+
         router.push(`/dashboard/${timetableId}`);
       });
     } else {
-      console.log("Your event can't end before it starts");
+      toast.error("Event cannot end before starting");
     }
   };
 

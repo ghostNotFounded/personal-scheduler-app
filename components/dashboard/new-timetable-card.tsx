@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { postData } from "@/lib/apiHandler";
 import { redirect } from "next/navigation";
 import { useTimetableStore } from "@/stores/timetable-store";
+import toast from "react-hot-toast";
 
 const NewTimetableCard = () => {
   const [isPending, startTransition] = useTransition();
@@ -39,13 +40,19 @@ const NewTimetableCard = () => {
   const onSubmit = (data: z.infer<typeof NewTimetableSchema>) => {
     const extension = "/timetables";
 
-    startTransition(async () => {
-      const res = await postData(extension, data);
+    try {
+      startTransition(async () => {
+        const res = await postData(extension, data);
 
-      extendTimetablesInStore([res]);
+        extendTimetablesInStore([res]);
 
-      redirect(`/dashboard/${res?._id}`);
-    });
+        toast.success("New timetable created");
+
+        redirect(`/dashboard/${res?._id}`);
+      });
+    } catch (error) {
+      toast.error("Some error occured");
+    }
   };
 
   return (

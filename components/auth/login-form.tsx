@@ -28,6 +28,7 @@ import { fetchData } from "@/lib/apiHandler";
 import { useTimetableStore } from "@/stores/timetable-store";
 import { useState } from "react";
 import { useEventStore } from "@/stores/events-store";
+import toast from "react-hot-toast";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -66,6 +67,8 @@ const LoginForm = () => {
 
         setTimetablesInStore(data);
 
+        toast.success("Login successful");
+
         if (data?.length > 0) {
           const id = data[0]._id;
 
@@ -75,7 +78,7 @@ const LoginForm = () => {
         }
       }
     } catch (error) {
-      console.log("Error: ", error);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
