@@ -1,23 +1,41 @@
 "use client";
 
+import { fetchData } from "@/lib/apiHandler";
 import { getDays } from "@/lib/get-days";
 import { useEventStore } from "@/stores/events-store";
+import { EventDetail } from "@/types";
 
 import { CalendarIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { ReactElement } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { ReactElement, useEffect, useState } from "react";
 
 const WeeklyView = () => {
   const iterations = 24;
 
-  const events = useEventStore((state) => state.events);
+  const params = useParams();
+  const [events, setEvents] = useState<EventDetail[]>();
+
+  const getEventsFromStore = useEventStore((state) => {
+    return state.events;
+  });
+
+  const setEventsInStore = useEventStore((state) => state.setEvents);
+
+  useEffect(() => {
+    const getEvents = async () => {
+      const extension = `/timetables/${params.timetableId}/events/`;
+      const res = await fetchData(extension);
+
+      setEventsInStore(res);
+    };
+
+    getEvents();
+  }, [params.timetableId]);
 
   const days = getDays();
 
   const router = useRouter();
   const pathname = usePathname();
-
-  console.log(pathname);
 
   return (
     <div className="relative bg-neutral-200 p-10 border-t border-neutral-300 overflow-y-auto">
@@ -38,7 +56,7 @@ const WeeklyView = () => {
 
         <div className="grid grid-cols-7 gap-10 w-full ml-10 select-none">
           {days.map((day, idx) => {
-            const filtered = events.filter(
+            const filtered = events?.filter(
               (event) => event.startDayNumber === day.dayNumber
             );
 
@@ -56,7 +74,7 @@ const WeeklyView = () => {
             ];
             let colorsIdx = 0;
 
-            filtered.map((event, idx) => {
+            filtered?.map((event, idx) => {
               divs.push(
                 <div
                   onClick={() => router.push(pathname + `/event/${event._id}`)}

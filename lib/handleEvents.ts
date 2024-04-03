@@ -34,7 +34,6 @@ export function extractEventInfo(event: initialEventDetail): {
   const startTimeFormatted = formatTime(startTime);
   const endTimeFormatted = formatTime(endTime);
 
-  // Calculate hour of the day (0 to 23)
   const hourOfDay = startDate.getUTCHours();
 
   const startDayNumber = parseInt(startDateFormatted.split("-")[0]);

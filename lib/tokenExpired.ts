@@ -1,13 +1,12 @@
-import { redirect } from "next/navigation";
 import { deleteCookie } from "./cookie";
 
-export const checkTokenExpiry = () => {
+export function CheckTokenExpiry() {
   const token = window.localStorage.getItem("token");
 
   // Check if token exists
   if (!token) {
     deleteCookie();
-    redirect("/login");
+    return Response.redirect("/login");
   }
 
   // Check if token is expired
@@ -17,7 +16,8 @@ export const checkTokenExpiry = () => {
 
   if (expirationTime && Date.now() >= expirationTime) {
     deleteCookie();
-
-    redirect("/login");
+    return Response.redirect("/login");
   }
-};
+
+  return Response.redirect("/login");
+}

@@ -1,12 +1,12 @@
 import axios from "axios";
 
 import { BASE_URL } from "@/constants";
-import { checkTokenExpiry } from "./tokenExpired";
+import { CheckTokenExpiry } from "./tokenExpired";
 
 export const fetchData = async (extension: string) => {
   const token = window.localStorage.getItem("token");
 
-  checkTokenExpiry();
+  CheckTokenExpiry();
 
   const url = BASE_URL + extension;
   const Authorization = "Bearer " + token;
@@ -19,7 +19,7 @@ export const fetchData = async (extension: string) => {
 export const postData = async (extension: string, data: any) => {
   const token = window.localStorage.getItem("token");
 
-  checkTokenExpiry();
+  CheckTokenExpiry();
 
   const url = BASE_URL + extension;
   const Authorization = "Bearer " + token;
@@ -32,7 +32,7 @@ export const postData = async (extension: string, data: any) => {
 export const deleteData = async (extension: string, id: string) => {
   const token = window.localStorage.getItem("token");
 
-  checkTokenExpiry();
+  CheckTokenExpiry();
 
   const url = BASE_URL + "/" + extension + "/" + id;
   const Authorization = "Bearer " + token;

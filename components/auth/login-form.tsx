@@ -72,17 +72,6 @@ const LoginForm = () => {
         if (data?.length > 0) {
           const id = data[0]._id;
 
-          const extension = "/timetables" + `/${id}` + "/events";
-
-          const res = await fetchData(extension);
-
-          if (res && Array.isArray(res)) {
-            const formattedEvents = res.map((event) =>
-              extractEventInfo(event as EventDetail)
-            );
-            setEventsInStore(formattedEvents);
-          }
-
           router.push(`/dashboard/${id}`);
         } else {
           router.push("/dashboard");

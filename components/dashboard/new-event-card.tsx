@@ -1,6 +1,5 @@
 "use client";
 
-import { TimePicker } from "react-time-picker";
 import { useEventStore } from "@/stores/events-store";
 import { NewEventSchema } from "@/schemeas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +28,8 @@ import {
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
+import { TimePicker } from "../ui/date-time-picker/time-picker";
+import { useParams } from "next/navigation";
 
 const NewEventCard = () => {
   const [isPending, startTransition] = useTransition();
@@ -37,24 +38,50 @@ const NewEventCard = () => {
     resolver: zodResolver(NewEventSchema),
     defaultValues: {
       name: "",
-      startDate: new Date(),
+      startDate: undefined,
       endDate: undefined,
-      startTime: undefined,
-      endTime: undefined,
+      startTime: "",
+      endTime: "",
     },
   });
 
+  const params = useParams();
   const setEventsInStore = useEventStore((state) => state.setEvents);
 
   const onSubmit = (data: z.infer<typeof NewEventSchema>) => {
-    const extension = "/events";
+    const extension = `/timetables/${params.timetableId}/events`;
 
-    const startDate = data.startDate.toISOString();
-    const endDate = data.endDate.toISOString();
+    const padWithZero = (num: number): string => {
+      return num < 10 ? "0" + num : num.toString();
+    };
 
-    startTransition(async () => {
-      console.log(data);
-    });
+    const constructTime = (date: Date, time: String) => {
+      return `${date.getFullYear()}-${padWithZero(
+        date.getMonth() + 1
+      )}-${padWithZero(date.getDate())}T${padWithZero(
+        parseInt(time.split(":")[0])
+      )}:${padWithZero(parseInt(time.split(":")[1]))}:00Z`;
+    };
+
+    const startDate = new Date(data.startDate);
+    const finalStartDate = constructTime(startDate, data.startTime);
+
+    const endDate = new Date(data.endDate);
+    const finalEndDate = constructTime(endDate, data.endTime);
+
+    if (finalEndDate >= finalStartDate) {
+      startTransition(async () => {
+        const body = {
+          startTime: finalStartDate,
+          endTime: finalEndDate,
+          name: data.name,
+        };
+
+        await postData(extension, body);
+      });
+    } else {
+      console.log("Your event can't end before it starts");
+    }
   };
 
   return (
@@ -99,6 +126,7 @@ const NewEventCard = () => {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            disabled={isPending}
                             variant={"outline"}
                             className="w-[240px] pl-3 text-left font-normal bg-purple-500/15 hover:bg-purple-500/20 border-purple-500 text-purple-200 hover:text-purple-200"
                           >
@@ -116,7 +144,12 @@ const NewEventCard = () => {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) => date < new Date()}
+                          disabled={(date) =>
+                            date <
+                            new Date(
+                              new Date().setDate(new Date().getDate() - 1)
+                            )
+                          }
                           initialFocus
                         />
                       </PopoverContent>
@@ -136,6 +169,7 @@ const NewEventCard = () => {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            disabled={isPending}
                             variant={"outline"}
                             className="w-[240px] pl-3 text-left font-normal bg-purple-500/15 hover:bg-purple-500/20 border-purple-500 text-purple-200 hover:text-purple-200"
                           >
@@ -174,16 +208,14 @@ const NewEventCard = () => {
                   <FormItem>
                     <FormLabel>Start time</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        step="1"
-                        min="0"
-                        max="23"
-                        maxLength={2}
-                        disabled={isPending}
-                        {...field}
-                        placeholder="Start time in hours"
-                        className="bg-purple-500/15 border-purple-500 w-[240px] text-purple-200"
+                      <TimePicker
+                        hourCycle={24}
+                        onChange={(selectedTime) => {
+                          if (selectedTime) {
+                            const formattedTime = `${selectedTime.hour}:${selectedTime.minute}`;
+                            field.onChange(formattedTime);
+                          }
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -198,16 +230,14 @@ const NewEventCard = () => {
                   <FormItem>
                     <FormLabel>End time</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        step="1"
-                        min="0"
-                        max="23"
-                        maxLength={2}
-                        disabled={isPending}
-                        {...field}
-                        placeholder="End time in hours"
-                        className="bg-purple-500/15 border-purple-500 text-purple-200 w-[240px]"
+                      <TimePicker
+                        hourCycle={24}
+                        onChange={(selectedTime) => {
+                          if (selectedTime) {
+                            const formattedTime = `${selectedTime.hour}:${selectedTime.minute}`;
+                            field.onChange(formattedTime);
+                          }
+                        }}
                       />
                     </FormControl>
                     <FormMessage />

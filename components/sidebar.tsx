@@ -7,13 +7,15 @@ import { CalendarIcon, ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import TimetableSwitcher from "./timetable-switcher";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Calendar } from "@/components/ui/calendar";
 import { useTimetableStore } from "@/stores/timetable-store";
 import GlowCard from "./glow-card";
+import { useEventStore } from "@/stores/events-store";
+import { fetchData } from "@/lib/apiHandler";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -26,7 +28,19 @@ const Sidebar = () => {
 
   const [date, setDate] = useState<Date | undefined>(new Date());
 
-  const pathname = usePathname();
+  const params = useParams();
+  const setEventsInStore = useEventStore((state) => state.setEvents);
+
+  useEffect(() => {
+    const getEvents = async () => {
+      const extension = `/timetables/${params.timetableId}/events/`;
+      const res = await fetchData(extension);
+
+      setEventsInStore(res);
+    };
+
+    getEvents();
+  }, [params.timetableId]);
 
   return (
     <div className="p-5 h-full flex flex-col justify-between min-w-max">
