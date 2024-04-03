@@ -12,5 +12,7 @@ export const NewTimetableSchema = z.object({
 export const NewEventSchema = z.object({
   name: z.string().min(1, { message: "Your event must have a name :/" }),
   startDate: z.date({ required_error: "Start time is required." }),
-  endDate: z.date({ required_error: "Start time is required." }),
+  endDate: z.date({ required_error: "End time is required." }),
+  startTime: z.string(),
+  endTime: z.string(),
 });

@@ -16,7 +16,7 @@ import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
@@ -32,7 +32,6 @@ const TimetableSwitcher = ({
 }: TimetableSwitcherProps) => {
   const params = useParams();
   const router = useRouter();
-  const pathname = usePathname();
 
   const formattedItems = Array.isArray(items)
     ? items.map((item: Timetable) => ({
@@ -49,7 +48,7 @@ const TimetableSwitcher = ({
 
   const onTimetableSelect = (timetable: { value: string; label: string }) => {
     setOpen(false);
-    router.push(`/${timetable.value}/${pathname.split("/")[2]}`);
+    router.push(`/dashboard/${timetable.value}`);
   };
 
   return (
@@ -109,6 +108,7 @@ const TimetableSwitcher = ({
                 className="bg-[#050a0d] cursor-pointer hover:bg-neutral-700"
                 onSelect={() => {
                   setOpen(false);
+                  router.push("/dashboard/create/timetable");
                 }}
               >
                 <PlusIcon className="mr-2 w-5 h-5 text-white" />

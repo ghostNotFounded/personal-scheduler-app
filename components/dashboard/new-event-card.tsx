@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { TimePicker } from "react-time-picker";
 import { useEventStore } from "@/stores/events-store";
 import { NewEventSchema } from "@/schemeas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,6 +39,8 @@ const NewEventCard = () => {
       name: "",
       startDate: new Date(),
       endDate: undefined,
+      startTime: undefined,
+      endTime: undefined,
     },
   });
 
@@ -47,12 +49,11 @@ const NewEventCard = () => {
   const onSubmit = (data: z.infer<typeof NewEventSchema>) => {
     const extension = "/events";
 
+    const startDate = data.startDate.toISOString();
+    const endDate = data.endDate.toISOString();
+
     startTransition(async () => {
-      const res = await postData(extension, data);
-
-      setEventsInStore([res]);
-
-      redirect(`/dashboard/${res?._id}`);
+      console.log(data);
     });
   };
 
@@ -75,6 +76,7 @@ const NewEventCard = () => {
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
+                      maxLength={15}
                       disabled={isPending}
                       {...field}
                       placeholder="Event #1"
@@ -158,6 +160,56 @@ const NewEventCard = () => {
                         />
                       </PopoverContent>
                     </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex gap-5">
+              <FormField
+                control={form.control}
+                name="startTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Start time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="23"
+                        maxLength={2}
+                        disabled={isPending}
+                        {...field}
+                        placeholder="Start time in hours"
+                        className="bg-purple-500/15 border-purple-500 w-[240px] text-purple-200"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>End time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="23"
+                        maxLength={2}
+                        disabled={isPending}
+                        {...field}
+                        placeholder="End time in hours"
+                        className="bg-purple-500/15 border-purple-500 text-purple-200 w-[240px]"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

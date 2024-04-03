@@ -155,3 +155,11 @@ body,
 .underlined:hover::after {
   width: 110%;
 }
+
+.react-time-picker__wrapper {
+  display: inline-block;
+}
+
+.react-time-picker__button {
+  display: none;
+}

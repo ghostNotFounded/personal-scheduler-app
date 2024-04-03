@@ -61,23 +61,6 @@ const Sidebar = () => {
         </GlowCard>
 
         <GlowCard>
-          <div className="flex flex-col">
-            <Link
-              href={"/dashboard/create/timetable"}
-              className="cursor-pointer underlined mb-2"
-            >
-              + Add timetable
-            </Link>
-            <Link
-              href={`${pathname}/create-event`}
-              className="cursor-pointer underlined mb-2"
-            >
-              + Add event
-            </Link>
-          </div>
-        </GlowCard>
-
-        <GlowCard>
           <div className="flex justify-between items-center text-sm z-20 relative">
             <h1>
               Select <br />
