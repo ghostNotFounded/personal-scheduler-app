@@ -31,6 +31,9 @@ export function extractEventInfo(event: initialEventDetail): {
 
   const hourOfDay = startDate.getUTCHours();
 
+  const minutes = startDate.getUTCMinutes();
+  const minuteOfDay = Math.floor(minutes / 15) * 15;
+
   const startDayNumber = parseInt(startDateFormatted.split("-")[0]);
 
   const difference = subtractDates(endTime, startTime);
@@ -43,7 +46,7 @@ export function extractEventInfo(event: initialEventDetail): {
     endTime: endTimeFormatted,
     timetableId: event.timetableID,
     _id: event._id,
-    row: hourOfDay * 4 - 3,
+    row: hourOfDay * 4 + minuteOfDay / 15 - 3,
     startDayNumber: startDayNumber,
     difference: difference * 4,
   };

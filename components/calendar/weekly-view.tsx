@@ -5,6 +5,7 @@ import { getDays } from "@/lib/get-days";
 import { extractEventInfo } from "@/lib/handleEvents";
 import { useEventStore } from "@/stores/events-store";
 import { EventDetail } from "@/types";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 import { CalendarIcon } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
@@ -29,7 +30,6 @@ const WeeklyView = () => {
 
       if (res && Array.isArray(res)) {
         const formattedEvents = res.map((event) => extractEventInfo(event));
-        console.log(formattedEvents);
 
         setEventsInStore(formattedEvents);
 
@@ -39,8 +39,6 @@ const WeeklyView = () => {
 
     getEvents();
   }, [params.timetableId]);
-
-  console.log({ events });
 
   const days = getDays();
 
@@ -74,24 +72,18 @@ const WeeklyView = () => {
 
             let divs: ReactElement[] = [];
 
-            const colors = [
-              "#b9d7fc",
-              "#c4acfb",
-              "#fff",
-              "#9fefc1",
-              "#f7d38a",
-              "#f9aad6",
-            ];
-            let colorsIdx = 0;
+            const colors = ["#3a0ca3", "#7209b7", "#f72585"];
 
             filtered?.map((event, idx) => {
               divs.push(
                 <div
                   onClick={() => router.push(pathname + `/event/${event._id}`)}
                   key={idx}
-                  className="rounded-xl p-5 m-1 text-white cursor-pointer"
+                  className="group relative rounded-xl p-5 text-white cursor-pointer"
                   style={{
-                    background: `${colors[idx]}`,
+                    background: `${
+                      colors[Math.floor(Math.random() * colors.length)]
+                    }`,
                     gridRow: `span ${event.difference} / span ${event.difference}`,
                     gridRowStart: `${event.row}`,
                   }}
@@ -102,12 +94,6 @@ const WeeklyView = () => {
                   </p>
                 </div>
               );
-
-              if (idx >= colors.length) {
-                idx = 0;
-              } else {
-                idx++;
-              }
             });
 
             return (
