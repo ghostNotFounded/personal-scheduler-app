@@ -10,17 +10,29 @@ import { Timetable, WeekDayInfo } from "@/types";
 import { useTimetableStore } from "@/stores/timetable-store";
 import { deleteData } from "@/lib/apiHandler";
 import { cn } from "@/lib/utils";
-import { getDays } from "@/lib/get-days";
+import { getDaysFromWeekNumber } from "@/lib/get-days";
 
 import WeeklyView from "@/components/calendar/weekly-view";
 import AlertModal from "@/components/modals/alert-modal";
+import { getMonthFromWeekNumber, getWeekNumber } from "@/lib/use-week";
 
 const CalendarView = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Get the days of the current weeek
-  const currWeek: WeekDayInfo[] = getDays();
+  const [week, setWeek] = useState<number>(getWeekNumber);
+  const increaseWeek = () => {
+    if (week < 53) {
+      setWeek((prevWeek) => prevWeek + 1);
+    }
+  };
+  const decreaseWeek = () => {
+    if (week > 1) {
+      setWeek((prevWeek) => prevWeek - 1);
+    }
+  };
+
+  const currWeek: WeekDayInfo[] = getDaysFromWeekNumber(week);
 
   // Get params
   const { timetableId } = useParams();
@@ -28,7 +40,7 @@ const CalendarView = () => {
   // Extract the ongoing month and year
   const currentDate = new Date();
   const monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
-  const currentMonth = monthFormatter.format(currentDate);
+  const currentMonth = getMonthFromWeekNumber(week);
   const currentYear = currentDate.getFullYear().toString();
 
   // Setting timetable on updating params
@@ -99,11 +111,20 @@ const CalendarView = () => {
       <div className="bg-white text-neutral-950 h-full rounded-2xl overflow-hidden flex flex-col scroll-smooth min-w-max">
         <div className="px-10 py-5 z-10">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-semibold">
+            <h1 className="text-2xl font-semibold min-w-[200px]">
               {currentMonth}, {currentYear}
             </h1>
 
-            <h1 className="text-3xl font-bold">{timetable?.name}</h1>
+            <div className="flex space-x-5 justify-between items-center w-full max-w-md select-none">
+              <h1 className="text-3xl font-bold min-w-[100px]">
+                {timetable?.name}
+              </h1>
+              <div className="flex items-center text-xl space-x-2">
+                <button onClick={decreaseWeek}>&lt;-</button>
+                <span>W{week}</span>
+                <button onClick={increaseWeek}>-&gt;</button>
+              </div>
+            </div>
 
             <div className="flex gap-5">
               <button

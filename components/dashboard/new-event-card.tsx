@@ -285,6 +285,13 @@ const NewEventCard = () => {
           </Button>
         </form>
       </Form>
+
+      <p
+        onClick={() => router.back()}
+        className="group cursor-pointer min-h-full"
+      >
+        &lt;- <span className="group-hover:underline">Go back</span>
+      </p>
     </div>
   );
 };

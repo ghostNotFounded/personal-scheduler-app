@@ -1,15 +1,15 @@
 "use client";
 
 import { fetchData } from "@/lib/apiHandler";
-import { getDays } from "@/lib/get-days";
+import { getDaysFromWeekNumber } from "@/lib/get-days";
 import { extractEventInfo } from "@/lib/handleEvents";
 import { useEventStore } from "@/stores/events-store";
 import { EventDetail } from "@/types";
-import { TrashIcon } from "@radix-ui/react-icons";
 
 import { CalendarIcon } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const WeeklyView = () => {
   const iterations = 24;
@@ -17,30 +17,35 @@ const WeeklyView = () => {
   const params = useParams();
   const [events, setEvents] = useState<EventDetail[]>();
 
-  const getEventsFromStore = useEventStore((state) => {
-    return state.events;
-  });
-
   const setEventsInStore = useEventStore((state) => state.setEvents);
 
   useEffect(() => {
     const getEvents = async () => {
-      const extension = `/timetables/${params.timetableId}/events`;
-      const res = await fetchData(extension);
+      try {
+        const extension = `/timetables/${params.timetableId}/events`;
+        const res = await fetchData(extension);
 
-      if (res && Array.isArray(res)) {
-        const formattedEvents = res.map((event) => extractEventInfo(event));
+        if (res && Array.isArray(res)) {
+          const formattedEvents = res.map((event) => extractEventInfo(event));
 
-        setEventsInStore(formattedEvents);
+          setEventsInStore(formattedEvents);
 
-        setEvents(formattedEvents);
+          setEvents(formattedEvents);
+        }
+      } catch (error) {
+        console.error(error);
+
+        toast.error("Token expired");
       }
     };
 
     getEvents();
   }, [params.timetableId]);
 
-  const days = getDays();
+  const today = new Date();
+  today.setDate(today.getDate() + 7);
+  // Get the days of the current weeek
+  const days = getDaysFromWeekNumber(10);
 
   const router = useRouter();
   const pathname = usePathname();
