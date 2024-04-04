@@ -170,7 +170,7 @@ const CalendarView = () => {
           </div>
         </div>
 
-        <WeeklyView />
+        <WeeklyView week={week} />
       </div>
     </>
   );

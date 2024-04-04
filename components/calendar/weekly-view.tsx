@@ -11,7 +11,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { ReactElement, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const WeeklyView = () => {
+const WeeklyView = ({ week }: { week: number }) => {
   const iterations = 24;
 
   const params = useParams();
@@ -42,10 +42,7 @@ const WeeklyView = () => {
     getEvents();
   }, [params.timetableId]);
 
-  const today = new Date();
-  today.setDate(today.getDate() + 7);
-  // Get the days of the current weeek
-  const days = getDaysFromWeekNumber(10);
+  const days = getDaysFromWeekNumber(week);
 
   const router = useRouter();
   const pathname = usePathname();
