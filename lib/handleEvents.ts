@@ -18,26 +18,38 @@ export function extractEventInfo(event: initialEventDetail): {
   startDayNumber: number;
   difference: number;
 } {
-  const startDate = new Date(event.startTime);
+  // Convert start time string to a Date object.
   const startTime = new Date(event.startTime);
 
+  // Convert end time string to a Date object.
   const endTime = new Date(event.endTime);
 
+  // Round start and end times to the nearest 15 minutes.
+  const roundedStartTime = roundToNearest15(startTime);
+  const roundedEndTime = roundToNearest15(endTime);
+
+  // Format start and end dates.
   const startDateFormatted = formatDate(startTime);
   const endDateFormatted = formatDate(endTime);
 
+  // Format start and end times.
   const startTimeFormatted = formatTime(startTime);
   const endTimeFormatted = formatTime(endTime);
 
-  const hourOfDay = startDate.getUTCHours();
+  // Calculate the hour and minute of the day for the rounded start time.
+  const hourOfDay = roundedStartTime.getHours();
+  const minuteOfDay = roundedStartTime.getMinutes();
 
-  const minutes = startDate.getUTCMinutes();
-  const minuteOfDay = Math.floor(minutes / 15) * 15;
-
+  // Extract the day number from the formatted start date.
   const startDayNumber = parseInt(startDateFormatted.split("-")[0]);
 
-  const difference = subtractDates(endTime, startTime);
+  // Calculate the duration of the event.
+  const difference = subtractDates(roundedEndTime, roundedStartTime);
 
+  // Calculate the row position based on the rounded start time.
+  const row = hourOfDay * 4 + minuteOfDay / 15 - 25;
+
+  // Return extracted event information.
   return {
     name: event.name,
     startDate: startDateFormatted,
@@ -46,23 +58,34 @@ export function extractEventInfo(event: initialEventDetail): {
     endTime: endTimeFormatted,
     timetableId: event.timetableID,
     _id: event._id,
-    row: hourOfDay * 4 + minuteOfDay / 15 - 3,
+    row: row,
     startDayNumber: startDayNumber,
-    difference: difference * 4,
+    difference: difference[0] * 4 + difference[1] * 4,
   };
 }
 
-function subtractDates(date1: Date, date2: Date): number {
+function roundToNearest15(date: Date): Date {
+  const roundedDate = new Date(date);
+  const roundedMinutes = Math.round(roundedDate.getMinutes() / 15) * 15;
+  roundedDate.setMinutes(roundedMinutes);
+  return roundedDate;
+}
+
+// Function to calculate the difference between two dates in hours and minutes.
+function subtractDates(date1: Date, date2: Date): number[] {
   const date1Ms = date1.getTime();
   const date2Ms = date2.getTime();
 
-  const differenceMs = Math.abs(date1Ms - date2Ms);
+  const differenceMs = date1Ms - date2Ms;
 
   const differenceHours = Math.floor(differenceMs / (1000 * 60 * 60));
+  const differenceMinutes =
+    (differenceMs % (1000 * 60 * 60)) / (1000 * 60 * 60);
 
-  return differenceHours;
+  return [differenceHours, differenceMinutes];
 }
 
+// Function to format a date as 'dd-mm-yyyy'.
 function formatDate(date: Date): string {
   const day = String(date.getUTCDate()).padStart(2, "0");
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -70,6 +93,7 @@ function formatDate(date: Date): string {
   return `${day}-${month}-${year}`;
 }
 
+// Function to format a time as 'hh:mm'.
 function formatTime(date: Date): string {
   const hours = String(date.getUTCHours()).padStart(2, "0");
   const minutes = String(date.getUTCMinutes()).padStart(2, "0");

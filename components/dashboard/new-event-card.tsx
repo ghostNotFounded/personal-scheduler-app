@@ -4,7 +4,7 @@ import { useEventStore } from "@/stores/events-store";
 import { NewEventSchema } from "@/schemeas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 
 import * as z from "zod";
 
@@ -39,15 +39,16 @@ const NewEventCard = () => {
     resolver: zodResolver(NewEventSchema),
     defaultValues: {
       name: "",
-      startDate: undefined,
-      endDate: undefined,
+      eventDate: undefined,
       startTime: "",
       endTime: "",
     },
   });
 
-  const { timetableId, eventId } = useParams();
+  const { timetableId } = useParams();
   const router = useRouter();
+
+  const events = useEventStore((state) => state.events);
 
   const onSubmit = (data: z.infer<typeof NewEventSchema>) => {
     const extension = `/timetables/${timetableId}/events`;
@@ -64,11 +65,78 @@ const NewEventCard = () => {
       )}:${padWithZero(parseInt(time.split(":")[1]))}:00Z`;
     };
 
-    const startDate = new Date(data.startDate);
+    const startDate = new Date(data.eventDate);
     const finalStartDate = constructTime(startDate, data.startTime);
 
-    const endDate = new Date(data.endDate);
+    const endDate = new Date(data.eventDate);
     const finalEndDate = constructTime(endDate, data.endTime);
+
+    const existingEvents = events.map((event) => {
+      // Split the date string by '-'
+      const startDateParts = event.startDate.split("-");
+      const endDateParts = event.endDate.split("-");
+
+      // Extract day, month, and year from the split parts
+      const startDay = parseInt(startDateParts[0]);
+      const startMonth = parseInt(startDateParts[1]) - 1; // Month is zero-based index
+      const startYear = parseInt(startDateParts[2]);
+
+      const endDay = parseInt(endDateParts[0]);
+      const endMonth = parseInt(endDateParts[1]) - 1; // Month is zero-based index
+      const endYear = parseInt(endDateParts[2]);
+
+      // Extract start and end time components
+      const [startHour, startMinute] = event.startTime.split(":");
+      const [endHour, endMinute] = event.endTime.split(":");
+
+      // Create date objects using the correct order of day, month, and year
+      const startDateTime = new Date(
+        startYear,
+        startMonth,
+        startDay,
+        parseInt(startHour),
+        parseInt(startMinute),
+        0
+      );
+      const endDateTime = new Date(
+        endYear,
+        endMonth,
+        endDay,
+        parseInt(endHour),
+        parseInt(endMinute),
+        0
+      );
+
+      return { start: startDateTime, end: endDateTime };
+    });
+
+    const isClashing = existingEvents.some((event) => {
+      const startDate = new Date(finalStartDate);
+      const endDate = new Date(finalEndDate);
+
+      startDate.setHours(startDate.getHours() - 5);
+      startDate.setMinutes(startDate.getMinutes() - 30);
+
+      endDate.setHours(endDate.getHours() - 5);
+      endDate.setMinutes(endDate.getMinutes() - 30);
+
+      const eventStart = event.start;
+      const eventEnd = event.end;
+
+      return (
+        (startDate >= eventStart && startDate < eventEnd) || // Case 1: new event starts between existing event start and end
+        (endDate > eventStart && endDate <= eventEnd) || // Case 2: new event ends between existing event start and end
+        (startDate <= eventStart && endDate >= eventEnd) || // Case 3: new event fully contains existing event
+        (startDate >= eventStart && endDate <= eventEnd) // Case 4: new event is fully contained by existing event
+      );
+    });
+
+    console.log(isClashing);
+
+    if (isClashing) {
+      toast.error("You already have another event");
+      return;
+    }
 
     if (finalEndDate >= finalStartDate) {
       startTransition(async () => {
@@ -120,90 +188,46 @@ const NewEventCard = () => {
               )}
             />
 
-            <div className="flex gap-5">
-              <FormField
-                control={form.control}
-                name="startDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Start Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            disabled={isPending}
-                            variant={"outline"}
-                            className="w-[240px] pl-3 text-left font-normal bg-purple-500/15 hover:bg-purple-500/20 border-purple-500 text-purple-200 hover:text-purple-200"
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a start date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date <
-                            new Date(
-                              new Date().setDate(new Date().getDate() - 1)
-                            )
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>End Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            disabled={isPending}
-                            variant={"outline"}
-                            className="w-[240px] pl-3 text-left font-normal bg-purple-500/15 hover:bg-purple-500/20 border-purple-500 text-purple-200 hover:text-purple-200"
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick an end date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < form.getValues("startDate")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="eventDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date of event</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          disabled={isPending}
+                          variant={"outline"}
+                          className="w-full pl-3 text-left font-normal bg-purple-500/15 hover:bg-purple-500/20 border-purple-500 text-purple-200 hover:text-purple-200"
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date <
+                          new Date(new Date().setDate(new Date().getDate() - 1))
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="flex gap-5">
               <FormField

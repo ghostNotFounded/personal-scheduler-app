@@ -97,7 +97,7 @@ const WeeklyView = () => {
             });
 
             return (
-              <div key={idx} className="grid grid-rows-96">
+              <div key={idx} className="grid grid-rows-96 gap-1">
                 {divs.map((ele) => ele)}
               </div>
             );
