@@ -7,6 +7,10 @@ import { redirect } from "next/navigation";
 import { useEffect } from "react";
 
 const DashboardPage = () => {
+  const setTimetablesInStore = useTimetableStore(
+    (state) => state.setTimetables
+  );
+
   useEffect(() => {
     const setTimetables = async () => {
       const data = await fetchData("/timetables");
@@ -14,11 +18,8 @@ const DashboardPage = () => {
     };
 
     setTimetables();
-  }, []);
+  }, [setTimetablesInStore]);
 
-  const setTimetablesInStore = useTimetableStore(
-    (state) => state.setTimetables
-  );
   const timetables = useTimetableStore((state) => state.timetables);
 
   if (timetables.length > 0) redirect(`/dashboard/${timetables[0]._id}`);

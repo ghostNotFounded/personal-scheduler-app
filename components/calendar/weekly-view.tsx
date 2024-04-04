@@ -40,7 +40,7 @@ const WeeklyView = ({ week }: { week: number }) => {
     };
 
     getEvents();
-  }, [params.timetableId]);
+  }, [params.timetableId, setEventsInStore]);
 
   const days = getDaysFromWeekNumber(week);
 

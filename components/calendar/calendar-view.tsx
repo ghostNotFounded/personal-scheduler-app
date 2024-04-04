@@ -17,6 +17,9 @@ import AlertModal from "@/components/modals/alert-modal";
 import { getMonthFromWeekNumber, getWeekNumber } from "@/lib/use-week";
 
 const CalendarView = () => {
+  // Declaring router
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +42,6 @@ const CalendarView = () => {
 
   // Extract the ongoing month and year
   const currentDate = new Date();
-  const monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
   const currentMonth = getMonthFromWeekNumber(week);
   const currentYear = currentDate.getFullYear().toString();
 
@@ -64,10 +66,7 @@ const CalendarView = () => {
         router.push(`/dashboard/${timetables[0]._id}`);
       }
     }
-  }, [timetableId, getTimetablesFromStore, timetables]);
-
-  // Declaring router
-  const router = useRouter();
+  }, [router, timetableId, getTimetablesFromStore, timetables]);
 
   const setTimetablesInStore = useTimetableStore(
     (state) => state.setTimetables
